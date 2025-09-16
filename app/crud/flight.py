@@ -3,7 +3,7 @@ from app.models.flight import FlightReport
 from app.schemas.flight import FlightReportCreate, FlightReportUpdate
 
 def create_flight_report(db: Session, report: FlightReportCreate, user_id: int):
-    db_report = FlightReport(**report.dict(), user_id=user_id)
+    db_report = FlightReport(**report.model_dump(), user_id=user_id)
     db.add(db_report)
     db.commit()
     db.refresh(db_report)
@@ -18,7 +18,7 @@ def get_flight_reports(db: Session, skip: int = 0, limit: int = 10):
 def update_flight_report(db: Session, report_id: int, report_update: FlightReportUpdate):
     db_report = db.query(FlightReport).filter(FlightReport.id == report_id).first()
     if db_report:
-        for key, value in report_update.dict(exclude_unset=True).items():
+        for key, value in report_update.model_dump(exclude_unset=True).items():
             setattr(db_report, key, value)
         db.commit()
         db.refresh(db_report)

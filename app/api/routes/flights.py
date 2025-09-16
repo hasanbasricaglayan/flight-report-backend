@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from app.models.user import User
 from app.schemas.flight import FlightReportCreate, FlightReportOut, FlightReportUpdate
 from app.db.session import get_db
 from app.crud.flight import (
@@ -14,7 +15,7 @@ from app.api.deps import get_current_user
 router = APIRouter(prefix="/flights", tags=["flights"])
 
 @router.post("/", response_model=FlightReportOut)
-def create_report(report: FlightReportCreate, db: Session = Depends(get_db), current_user=Depends(get_current_user)):
+def create_report(report: FlightReportCreate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     return create_flight_report(db, report, current_user.id)
 
 @router.get("/", response_model=list[FlightReportOut])
@@ -29,7 +30,7 @@ def get_report(report_id: int, db: Session = Depends(get_db)):
     return report
 
 @router.put("/{report_id}", response_model=FlightReportOut)
-def update_report(report_id: int, report_update: FlightReportUpdate, db: Session = Depends(get_db), current_user=Depends(get_current_user)):
+def update_report(report_id: int, report_update: FlightReportUpdate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     report = get_flight_report(db, report_id)
     if not report:
         raise HTTPException(status_code=404, detail="Report not found")
@@ -38,7 +39,7 @@ def update_report(report_id: int, report_update: FlightReportUpdate, db: Session
     return update_flight_report(db, report_id, report_update)
 
 @router.delete("/{report_id}", response_model=dict)
-def delete_report(report_id: int, db: Session = Depends(get_db), current_user=Depends(get_current_user)):
+def delete_report(report_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     report = get_flight_report(db, report_id)
     if not report:
         raise HTTPException(status_code=404, detail="Report not found")

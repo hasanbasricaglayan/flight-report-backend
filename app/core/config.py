@@ -1,4 +1,5 @@
-from pydantic import BaseSettings
+from functools import lru_cache
+from pydantic_settings  import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     PROJECT_NAME: str = "Flight Report"
@@ -9,7 +10,8 @@ class Settings(BaseSettings):
     SECRET_KEY: str
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24
 
-    class Config:
-        env_file = ".env"
+    model_config = SettingsConfigDict(env_file=".env")
 
-settings = Settings()
+@lru_cache()
+def get_settings():
+    return Settings()

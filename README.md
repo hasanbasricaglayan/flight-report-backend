@@ -35,10 +35,10 @@ A **FastAPI backend** for a Flight Report platform where users can register, log
 Create a `.env` file in the root directory of the project. Add environment variables on new lines in the form of `NAME=VALUE`. For example:
 
 ```
-POSTGRES_USER=flightuser
-POSTGRES_PASSWORD=flightpass
-POSTGRES_DB=flightdb
-DATABASE_URL=postgresql+psycopg2://flightuser:flightpass@db:5432/flightdb
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=password
+POSTGRES_DB=postgres
+DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5432/${POSTGRES_DB}
 SECRET_KEY=thisisthekeyforflightreportcloneproject
 ACCESS_TOKEN_EXPIRE_MINUTES=1440
 ```
@@ -54,7 +54,7 @@ docker-compose up --build
 2. FastAPI will be available at:
 
 ```
-http://localhost:8000
+http://localhost:8000/docs
 ```
 
 ### Without Docker
@@ -83,5 +83,5 @@ uvicorn app.main:app --reload
 4. FastAPI will be available at:
 
 ```
-http://localhost:8000
+http://localhost:8000/docs
 ```
